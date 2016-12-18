@@ -2,17 +2,22 @@ import mongoose from "mongoose";
 import winston from "winston";
 import config from "config";
 
-// Connect to mongodb
-mongoose.connect(config.dbPath);
-const db = mongoose.connection;
+// See http://mongoosejs.com/docs/promises.html
+mongoose.Promise = global.Promise;
 
-// Define event listeners
-db.on("error", () => {
-  winston.error("Error occured from db");
-});
+if (process.env.NODE_ENV !== "test") {
+  // Connect to mongodb
+  mongoose.connect(config.dbPath);
+  const db = mongoose.connection;
 
-db.once("open", () => {
-  winston.info("Successfully opened the db");
-});
+  // Define event listeners
+  db.on("error", () => {
+    winston.error("Error occured from db");
+  });
+
+  db.once("open", () => {
+    winston.info("Connected to mongodb");
+  });
+}
 
 export default mongoose;
