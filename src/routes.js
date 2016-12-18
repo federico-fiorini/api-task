@@ -3,7 +3,7 @@ import community from "./handlers/communityHandler";
 
 export default (app) => {
   // Define root handler
-  app.post("/", handlers.getRoot);
+  app.get("/", handlers.getRoot);
 
   // Define communities handlers
   app.post("/communities", community.createCommunity);
