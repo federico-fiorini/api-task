@@ -1,4 +1,3 @@
-import assert from "assert";
 import { expect } from 'chai';
 import Community from '../src/models/communityModel';
 
@@ -106,10 +105,3 @@ describe('community', () => {
         });
     });
 });
-
-
-// describe("Test template", () => {
-//   it("should pass", () => {
-//     assert.equal(2 + 2, 4);
-//   });
-// });
