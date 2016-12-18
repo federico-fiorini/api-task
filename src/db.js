@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import winston from "winston";
-import config from "../config.json";
+import config from "config";
 
 // Connect to mongodb
 mongoose.connect(config.dbPath);

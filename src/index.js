@@ -1,6 +1,6 @@
 import restify from "restify";
 import winston from "winston";
-import config from "../config.json";
+import config from "config";
 import routes from "./routes";
 
 // Create resify server
