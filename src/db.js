@@ -1,18 +1,18 @@
-import mongoose from 'mongoose';
-import config from '../config';
+import mongoose from "mongoose";
 import winston from "winston";
+import config from "../config.json";
 
 // Connect to mongodb
 mongoose.connect(config.dbPath);
-var db = mongoose.connection;
+const db = mongoose.connection;
 
 // Define event listeners
-db.on('error', function () {
-	winston.log('error', 'Error occured from db');
+db.on("error", () => {
+  winston.log("error", "Error occured from db");
 });
 
-db.once('open', function dbOpen() {
-	winston.log('info', 'successfully opened the db');
+db.once("open", () => {
+  winston.log("info", "successfully opened the db");
 });
 
 export default mongoose;

@@ -1,38 +1,37 @@
-import mongoose from '../db';
-import validate from 'mongoose-validator';
+import validate from "mongoose-validator";
+import mongoose from "../db";
 
 // Community model
-export default (function communityModel () {
-
+export default (function communityModel() {
   // Define validators
-  var nameValidator = [
+  const nameValidator = [
     validate({
-      validator: 'isLength',
+      validator: "isLength",
       arguments: [1, 100],
-      message: 'Name should be max 100 characters'
-    })
+      message: "Name should be max 100 characters",
+    }),
   ];
 
-  var descriptionValidator = [
+  const descriptionValidator = [
     validate({
-      validator: 'isLength',
+      validator: "isLength",
       arguments: [1, 200],
-      message: 'Description should be max 200 characters'
-    })
+      message: "Description should be max 200 characters",
+    }),
   ];
 
   // Define schema
-  var schema = {
-    uuid: {type: String, required: true},
-    name: {type: String, required: true, validate: nameValidator},
-    description: {type: String, required: true, validate: descriptionValidator},
-    slug: {type: String, required: true},
-    creationDate: {type: Date, default: Date.now}
+  const schema = {
+    uuid: { type: String, required: true },
+    name: { type: String, required: true, validate: nameValidator },
+    description: { type: String, required: true, validate: descriptionValidator },
+    slug: { type: String, required: true },
+    creationDate: { type: Date, default: Date.now },
   };
 
   // Create mongoose model
-  var communitySchema = mongoose.Schema(schema);
-  var community = mongoose.model('community', communitySchema);
+  const communitySchema = mongoose.Schema(schema);
+  const community = mongoose.model("community", communitySchema);
 
   return community;
-})();
+}());

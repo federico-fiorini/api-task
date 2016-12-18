@@ -1,7 +1,7 @@
 import restify from "restify";
 import winston from "winston";
-import config from "../config";
 import handlers from "api/handlers";
+import config from "../config.json";
 
 // Create resify server
 const app = restify.createServer();
@@ -13,5 +13,5 @@ const PORT = process.env.PORT || config.port;
 app.get("/", handlers.getRoot);
 
 if (NODE_ENV !== "test") {
-  app.listen(PORT, () => winston.info("Listening port " + PORT));
+  app.listen(PORT, () => winston.info(`Listening port ${PORT}`));
 }
