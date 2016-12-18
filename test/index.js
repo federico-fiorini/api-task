@@ -5,7 +5,7 @@ import Community from '../src/models/communityModel';
 // Set test community
 var testCommunity = {
   uuid: "cd17d160-c3a1-11e6-b5ea-270f32f3a33a",
-  name: "The test community The test community The test community The test community The test community The test community The test community The test community The test community The test community The test community The test community",
+  name: "The test community",
   description: "A community to test the mongodb model",
   slug: "the-test-community"
 }
@@ -64,7 +64,35 @@ describe('community', () => {
         });
     });
 
-    it('should be valid if all fields are provided', function(done) {
+    it('should be invalid if name is longer than 100 chars', function(done) {
+        var comm = new Community({
+          uuid: testCommunity.uuid,
+          name: 'a'.repeat(101),
+          description: testCommunity.description,
+          slug: testCommunity.slug
+        });
+
+        comm.validate(function(err) {
+            expect(err.errors.name).to.exist;
+            done();
+        });
+    });
+
+    it('should be invalid if description is longer than 200 chars', function(done) {
+        var comm = new Community({
+          uuid: testCommunity.uuid,
+          name: testCommunity.name,
+          description: 'a'.repeat(201),
+          slug: testCommunity.slug
+        });
+
+        comm.validate(function(err) {
+            expect(err.errors.description).to.exist;
+            done();
+        });
+    });
+
+    it('should be valid if all fields are provided (and valid)', function(done) {
         var comm = new Community({
           uuid: testCommunity.uuid,
           name: testCommunity.name,
