@@ -47,7 +47,7 @@ function CommunityHandler() {
 
       // Return not found status
       res.status(404);
-      return res.json({ status: "OK", data: "Not found" });
+      return res.json({ status: "Not found" });
     });
   };
 
@@ -97,14 +97,14 @@ function CommunityHandler() {
 
         // Return not found status
         res.status(404);
-        return res.json({ status: "OK", data: "Not found" });
+        return res.json({ status: "Not found" });
       });
   };
 
   // Delete community
   this.deleteCommunity = (req, res) => {
     // Find community by uuid and delete it
-    Community.findOneAndRemove({ uuid: req.params.uuid }, (err) => {
+    Community.findOneAndRemove({ uuid: req.params.uuid }, (err, result) => {
       // Return error status
       if (err) {
         res.status(400);
@@ -112,7 +112,13 @@ function CommunityHandler() {
       }
 
       // Return success status
-      return res.json({ status: "OK" });
+      if (result) {
+        return res.json({ status: "OK" });
+      }
+
+      // Return not found status
+      res.status(404);
+      return res.json({ status: "Not found" });
     });
   };
 

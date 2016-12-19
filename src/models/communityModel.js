@@ -31,7 +31,5 @@ export default (function communityModel() {
 
   // Create mongoose model
   const communitySchema = mongoose.Schema(schema);
-  const community = mongoose.model("community", communitySchema);
-
-  return community;
+  return mongoose.model("community", communitySchema);
 }());
