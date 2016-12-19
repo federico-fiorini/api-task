@@ -13,8 +13,8 @@ function CommunityHandler() {
     // Set community object
     let newCommunity = {
       uuid: uuidV4(),
-      name: req.params.name,
-      description: req.params.description
+      name: req.body.name,
+      description: req.body.description
     };
 
     // Filter to remove undefined fields
@@ -66,10 +66,19 @@ function CommunityHandler() {
 
   // Update community
   this.updateCommunity = (req, res) => {
+    // Check if bad request
+    const bodyKeys = Object.keys(req.body);
+    for (let i = 0; i < bodyKeys.length; i++) {
+      // Return bad request if not updatable field
+      if (Community.updatableFields.indexOf(bodyKeys[i]) === -1) {
+        return handlers.sendResponseData(res, 400);
+      }
+    }
+
     // Define updated community object
     let updatedCommunity = {
-      name: req.params.name,
-      description: req.params.description,
+      name: req.body.name,
+      description: req.body.description,
     };
 
     // Filter to remove undefined fields

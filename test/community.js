@@ -165,10 +165,11 @@ describe("Community handlers", function() {
     Community.find.yields(null, dbResponse);
 
     // Set request and response
-    let req = { params: { } };
+    let req = { params: { }, body: { } };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.getCommunities(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
   });
 
@@ -183,11 +184,13 @@ describe("Community handlers", function() {
     let req = {
       params: {
         "uuid": testCommunity.uuid
-      }
+      },
+      body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.getCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOne, { "uuid": testCommunity.uuid });
   });
@@ -203,11 +206,13 @@ describe("Community handlers", function() {
     let req = {
       params: {
         "uuid": "not-existing-uuid"
-      }
+      },
+      body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.getCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOne, { "uuid": "not-existing-uuid" });
@@ -222,7 +227,8 @@ describe("Community handlers", function() {
 
     // Set request and response
     let req = {
-      params: {
+      params: { },
+      body: {
         "name": testCommunity2.name,
         "description": testCommunity2.description,
       }
@@ -230,6 +236,7 @@ describe("Community handlers", function() {
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.createCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 201);
   });
@@ -243,13 +250,15 @@ describe("Community handlers", function() {
 
     // Set request and response
     let req = {
-      params: {
+      params: { },
+      body: {
         "name": testCommunity2.name
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.createCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
   });
@@ -265,11 +274,13 @@ describe("Community handlers", function() {
     let req = {
       params: {
         "uuid": testCommunity.uuid
-      }
+      },
+      body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.deleteCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": testCommunity.uuid });
   });
@@ -285,11 +296,13 @@ describe("Community handlers", function() {
     let req = {
       params: {
         "uuid": "not-existing-uuid"
-      }
+      },
+      body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.deleteCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": "not-existing-uuid" });
@@ -305,13 +318,16 @@ describe("Community handlers", function() {
     // Set request and response
     let req = {
       params: {
-        "uuid": testCommunity.uuid,
+        "uuid": testCommunity.uuid
+      },
+      body: {
         "description": testCommunity.description
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.updateCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(
       Community.findOneAndUpdate,
@@ -331,11 +347,13 @@ describe("Community handlers", function() {
     let req = {
       params: {
         "uuid": "not-existing-uuid"
-      }
+      },
+      body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.updateCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOneAndUpdate, { "uuid": "not-existing-uuid" });
@@ -352,12 +370,15 @@ describe("Community handlers", function() {
     let req = {
       params: {
         "uuid": testCommunity.uuid,
+      },
+      body: {
         "description": "invalid description"
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
     CommunityRoutes.updateCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
     sinon.assert.calledWith(
@@ -365,5 +386,27 @@ describe("Community handlers", function() {
       { "uuid": testCommunity.uuid },
       { "description": "invalid description" }
     );
+  });
+
+  it("Should not update a community with not updatable fields", function() {
+    // Set test community and expected result
+    let expectedResponse = { status: "ERROR" };
+
+    // Set request and response
+    let req = {
+      params: {
+        "uuid": testCommunity.uuid,
+      },
+      body: {
+        "uuid": "different-uuid"
+      }
+    };
+    let res = { json: sinon.stub(), status: sinon.stub() };
+
+    CommunityRoutes.updateCommunity(req, res);
+    sinon.assert.calledOnce(res.json);
+    sinon.assert.calledWith(res.json, expectedResponse);
+    sinon.assert.calledWith(res.status, 400);
+    sinon.assert.notCalled(Community.findOneAndUpdate);
   });
 });

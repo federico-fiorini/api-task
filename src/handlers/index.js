@@ -38,7 +38,6 @@ function sendResponseData(res, statusCode, responseData, responseKeys) {
 
       // Return response with data
       return res.json({ status: "OK", data: responseData });
-
     case 404:
       // Return not found response
       return res.json({ status: "Not found" });

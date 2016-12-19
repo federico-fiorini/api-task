@@ -31,5 +31,10 @@ export default (function communityModel() {
 
   // Create mongoose model
   const communitySchema = mongoose.Schema(schema);
-  return mongoose.model("community", communitySchema);
+  let community = mongoose.model("community", communitySchema);
+
+  // Set updatable fields
+  community.updatableFields = ['name', 'description'];
+
+  return community;
 }());
