@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import slug from "mongoose-slug-generator";
 import winston from "winston";
 import config from "config";
 
 // See http://mongoosejs.com/docs/promises.html
 mongoose.Promise = global.Promise;
+mongoose.plugin(slug);
 
 if (process.env.NODE_ENV !== "test") {
   // Connect to mongodb

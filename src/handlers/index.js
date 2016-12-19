@@ -9,6 +9,7 @@ function sendResponseData(res, statusCode, responseData, responseKeys) {
   // Set response status code
   res.status(statusCode);
 
+  // Filter object by give keys
   const filterByKeys = (obj) => lodash.pickBy(obj, function(value, key) {
     return responseKeys.indexOf(key) > -1;
   });

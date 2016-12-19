@@ -22,10 +22,10 @@ export default (function communityModel() {
 
   // Define schema
   const schema = {
-    uuid: { type: String, required: true },
+    uuid: { type: String, required: true , unique : true, dropDups: true},
     name: { type: String, required: true, validate: nameValidator },
     description: { type: String, required: true, validate: descriptionValidator },
-    slug: { type: String, required: true },
+    slug: { type: String, slug: "name", unique: true },
     creationDate: { type: Date, default: Date.now },
   };
 

@@ -1,5 +1,4 @@
-import uuidV1 from "uuid/v1";
-import slug from "slug";
+import uuidV4 from "uuid/v4";
 import lodash from "lodash";
 import Community from "api/models/communityModel";
 import handlers from "api/handlers";
@@ -13,10 +12,9 @@ function CommunityHandler() {
   this.createCommunity = (req, res) => {
     // Set community object
     let newCommunity = {
-      uuid: uuidV1(),
+      uuid: uuidV4(),
       name: req.params.name,
-      description: req.params.description,
-      slug: req.params.name !== undefined ? slug(req.params.name) : undefined,
+      description: req.params.description
     };
 
     // Filter to remove undefined fields
@@ -72,7 +70,6 @@ function CommunityHandler() {
     let updatedCommunity = {
       name: req.params.name,
       description: req.params.description,
-      slug: req.params.name !== undefined ? slug(req.params.name) : undefined,
     };
 
     // Filter to remove undefined fields

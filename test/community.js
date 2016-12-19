@@ -72,21 +72,6 @@ describe("Community model", () => {
     });
   });
 
-  it("should be invalid if slug is empty", function(done) {
-    // Create new community with no slug
-    var comm = new Community({
-      uuid: testCommunity.uuid,
-      name: testCommunity.name,
-      description: testCommunity.description
-    });
-
-    // Validate it
-    comm.validate(function(err) {
-      expect(err.errors.slug).to.exist;
-      done();
-    });
-  });
-
   it("should be invalid if uuid is empty", function(done) {
     // Create new community with no uuid
     var comm = new Community({
