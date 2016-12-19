@@ -8,14 +8,36 @@ var testCommunity = {
   uuid: "cd17d160-c3a1-11e6-b5ea-270f32f3a33a",
   name: "The test community",
   description: "A community to test the mongodb model",
-  slug: "the-test-community"
+  slug: "the-test-community",
+  creationDate: "2016-12-19T13:49:17.602Z"
+}
+
+var testCommunityDB ={
+  _id: "5857e55dd997a925f8013020",
+  uuid: "cd17d160-c3a1-11e6-b5ea-270f32f3a33a",
+  name: "The test community",
+  description: "A community to test the mongodb model",
+  slug: "the-test-community",
+  __v: 0,
+  creationDate: "2016-12-19T13:49:17.602Z"
 }
 
 var testCommunity2 = {
   uuid: "4be8f640-c546-11e6-8fa8-37253a84c3be",
   name: "Another test community",
   description: "A community to test the mongodb model",
-  slug: "another-test-community"
+  slug: "another-test-community",
+  creationDate: "2016-12-20T13:49:17.602Z"
+}
+
+var testCommunity2DB ={
+  _id: "5856c5679af2380d07ab16b0",
+  uuid: "4be8f640-c546-11e6-8fa8-37253a84c3be",
+  name: "Another test community",
+  description: "A community to test the mongodb model",
+  slug: "another-test-community",
+  __v: 0,
+  creationDate: "2016-12-20T13:49:17.602Z"
 }
 
 // Unit tests for community model
@@ -131,14 +153,31 @@ describe("Community model", () => {
 
 describe("Community handlers", function() {
 
+  // Stub every mongo function before each test
+  beforeEach(function() {
+    sinon.stub(Community, "find");
+    sinon.stub(Community, "findOne");
+    sinon.stub(Community, "create");
+    sinon.stub(Community, "findOneAndRemove");
+    sinon.stub(Community, "findOneAndUpdate");
+  });
+
+  // Restore every mongo function before each test
+  afterEach(function() {
+    Community.find.restore();
+    Community.findOne.restore();
+    Community.create.restore();
+    Community.findOneAndRemove.restore();
+    Community.findOneAndUpdate.restore();
+  });
+
   it("Should get all communities", function() {
     // Set test community and expected result
-    let communities = [testCommunity, testCommunity2];
-    let expectedResponse = { status: "OK", data: communities };
+    let dbResponse = [testCommunityDB, testCommunity2DB];
+    let expectedResponse = { status: "OK", data: [testCommunity, testCommunity2] };
 
     // Yield expected values
-    sinon.stub(Community, "find");
-    Community.find.yields(null, communities);
+    Community.find.yields(null, dbResponse);
 
     // Set request and response
     let req = { params: { } };
@@ -146,8 +185,6 @@ describe("Community handlers", function() {
 
     CommunityRoutes.getCommunities(req, res);
     sinon.assert.calledWith(res.json, expectedResponse);
-
-    Community.find.restore();
   });
 
   it("Should get one community", function() {
@@ -155,8 +192,7 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "OK", data: testCommunity };
 
     // Yield expected values
-    sinon.stub(Community, "findOne");
-    Community.findOne.yields(null, testCommunity);
+    Community.findOne.yields(null, testCommunityDB);
 
     // Set request and response
     let req = {
@@ -169,8 +205,6 @@ describe("Community handlers", function() {
     CommunityRoutes.getCommunity(req, res);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOne, { "uuid": testCommunity.uuid });
-
-    Community.findOne.restore();
   });
 
   it("Should not find community", function() {
@@ -178,7 +212,6 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "Not found" };
 
     // Yield expected values
-    sinon.stub(Community, "findOne");
     Community.findOne.yields(null, null);
 
     // Set request and response
@@ -193,8 +226,6 @@ describe("Community handlers", function() {
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOne, { "uuid": "not-existing-uuid" });
-
-    Community.findOne.restore();
   });
 
   it("Should create a new community", function() {
@@ -202,8 +233,7 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "OK", data: testCommunity2 };
 
     // Yield expected values
-    sinon.stub(Community, "create");
-    Community.create.yields(null, testCommunity2);
+    Community.create.yields(null, testCommunity2DB);
 
     // Set request and response
     let req = {
@@ -217,8 +247,6 @@ describe("Community handlers", function() {
     CommunityRoutes.createCommunity(req, res);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 201);
-
-    Community.create.restore();
   });
 
   it("Should not create a new community with db error", function() {
@@ -226,7 +254,6 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "ERROR" };
 
     // Yield expected values
-    sinon.stub(Community, "create");
     Community.create.yields("Error in the db", null);
 
     // Set request and response
@@ -240,8 +267,6 @@ describe("Community handlers", function() {
     CommunityRoutes.createCommunity(req, res);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
-
-    Community.create.restore();
   });
 
   it("Should delete a community", function() {
@@ -249,8 +274,7 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "OK" };
 
     // Yield expected values
-    sinon.stub(Community, "findOneAndRemove");
-    Community.findOneAndRemove.yields(null, testCommunity);
+    Community.findOneAndRemove.yields(null, testCommunityDB);
 
     // Set request and response
     let req = {
@@ -263,8 +287,6 @@ describe("Community handlers", function() {
     CommunityRoutes.deleteCommunity(req, res);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": testCommunity.uuid });
-
-    Community.findOneAndRemove.restore();
   });
 
   it("Should not delete a community if not found", function() {
@@ -272,7 +294,6 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "Not found" };
 
     // Yield expected values
-    sinon.stub(Community, "findOneAndRemove");
     Community.findOneAndRemove.yields(null, null);
 
     // Set request and response
@@ -287,8 +308,6 @@ describe("Community handlers", function() {
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": "not-existing-uuid" });
-
-    Community.findOneAndRemove.restore();
   });
 
   it("Should update a community", function() {
@@ -296,8 +315,7 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "OK", data: testCommunity };
 
     // Yield expected values
-    sinon.stub(Community, "findOneAndUpdate");
-    Community.findOneAndUpdate.yields(null, testCommunity);
+    Community.findOneAndUpdate.yields(null, testCommunityDB);
 
     // Set request and response
     let req = {
@@ -315,8 +333,6 @@ describe("Community handlers", function() {
       { "uuid": testCommunity.uuid },
       { "description": testCommunity.description }
     );
-
-    Community.findOneAndUpdate.restore();
   });
 
   it("Should not update a community if not found", function() {
@@ -324,7 +340,6 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "Not found" };
 
     // Yield expected values
-    sinon.stub(Community, "findOneAndUpdate");
     Community.findOneAndUpdate.yields(null, null);
 
     // Set request and response
@@ -339,8 +354,6 @@ describe("Community handlers", function() {
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOneAndUpdate, { "uuid": "not-existing-uuid" });
-
-    Community.findOneAndUpdate.restore();
   });
 
   it("Should not update a community if db error", function() {
@@ -348,7 +361,6 @@ describe("Community handlers", function() {
     let expectedResponse = { status: "ERROR" };
 
     // Yield expected values
-    sinon.stub(Community, "findOneAndUpdate");
     Community.findOneAndUpdate.yields("Error in the db", null);
 
     // Set request and response
@@ -368,7 +380,5 @@ describe("Community handlers", function() {
       { "uuid": testCommunity.uuid },
       { "description": "invalid description" }
     );
-
-    Community.findOneAndUpdate.restore();
   });
 });

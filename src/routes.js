@@ -1,5 +1,5 @@
 import handlers from "api/handlers";
-import community from "./handlers/communityHandler";
+import community from "api/handlers/communityHandler";
 
 export default (app) => {
   // Define root handler

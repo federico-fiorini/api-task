@@ -1,7 +1,7 @@
 import restify from "restify";
 import winston from "winston";
 import config from "config";
-import routes from "./routes";
+import routes from "api/routes";
 
 // Create resify server
 const app = restify.createServer();

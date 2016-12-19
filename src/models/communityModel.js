@@ -1,5 +1,5 @@
 import validate from "mongoose-validator";
-import mongoose from "../db";
+import mongoose from "api/db";
 
 // Community model
 export default (function communityModel() {

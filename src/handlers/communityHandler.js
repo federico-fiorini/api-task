@@ -1,9 +1,14 @@
 import uuidV1 from "uuid/v1";
 import slug from "slug";
 import lodash from "lodash";
-import Community from "../models/communityModel";
+import Community from "api/models/communityModel";
+import handlers from "api/handlers";
 
 function CommunityHandler() {
+
+  // Filter results to remove database specific fields
+  const schemaKeys = Object.keys(Community.schema.obj);
+
   // Create new community
   this.createCommunity = (req, res) => {
     // Set community object
@@ -20,13 +25,11 @@ function CommunityHandler() {
     Community.create(newCommunity, (err, result) => {
       // Return error status
       if (err) {
-        res.status(400);
-        return res.json({ status: "ERROR" });
+        return handlers.sendResponseData(res, 400);
       }
 
       // Return result
-      res.status(201);
-      return res.json({ status: "OK", data: result });
+      return handlers.sendResponseData(res, 201, result, schemaKeys);
     });
   };
 
@@ -36,18 +39,16 @@ function CommunityHandler() {
     Community.findOne({ uuid: req.params.uuid }, (err, result) => {
       // Return error status
       if (err) {
-        res.status(400);
-        return res.json({ status: "ERROR" });
+        return handlers.sendResponseData(res, 400);
       }
 
       // Return result
       if (result) {
-        return res.json({ status: "OK", data: result });
+        return handlers.sendResponseData(res, 200, result, schemaKeys);
       }
 
       // Return not found status
-      res.status(404);
-      return res.json({ status: "Not found" });
+      return handlers.sendResponseData(res, 404);
     });
   };
 
@@ -57,12 +58,11 @@ function CommunityHandler() {
     Community.find({}, (err, result) => {
       // Return error status
       if (err) {
-        res.status(400);
-        return res.json({ status: "ERROR" });
+        return handlers.sendResponseData(res, 400);
       }
 
       // Return results
-      return res.json({ status: "OK", data: result });
+      return handlers.sendResponseData(res, 200, result, schemaKeys);
     });
   };
 
@@ -86,18 +86,16 @@ function CommunityHandler() {
       (err, result) => {
         // Return error status
         if (err) {
-          res.status(400);
-          return res.json({ status: "ERROR" });
+          return handlers.sendResponseData(res, 400);
         }
 
         // Return result
         if (result) {
-          return res.json({ status: "OK", data: result });
+          return handlers.sendResponseData(res, 200, result, schemaKeys);
         }
 
         // Return not found status
-        res.status(404);
-        return res.json({ status: "Not found" });
+        return handlers.sendResponseData(res, 404);
       });
   };
 
@@ -107,18 +105,16 @@ function CommunityHandler() {
     Community.findOneAndRemove({ uuid: req.params.uuid }, (err, result) => {
       // Return error status
       if (err) {
-        res.status(400);
-        return res.json({ status: "ERROR" });
+        return handlers.sendResponseData(res, 400);
       }
 
       // Return success status
       if (result) {
-        return res.json({ status: "OK" });
+        return handlers.sendResponseData(res, 200);
       }
 
       // Return not found status
-      res.status(404);
-      return res.json({ status: "Not found" });
+      return handlers.sendResponseData(res, 404);
     });
   };
 
