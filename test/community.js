@@ -167,8 +167,10 @@ describe("Community handlers", function() {
     // Set request and response
     let req = { params: { }, body: { } };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.getCommunities(req, res);
+    await CommunityRoutes.getCommunities(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
   });
@@ -188,8 +190,10 @@ describe("Community handlers", function() {
       body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.getCommunity(req, res);
+    await CommunityRoutes.getCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOne, { "uuid": testCommunity.uuid });
@@ -210,8 +214,10 @@ describe("Community handlers", function() {
       body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.getCommunity(req, res);
+    await CommunityRoutes.getCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
@@ -234,8 +240,10 @@ describe("Community handlers", function() {
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.createCommunity(req, res);
+    await CommunityRoutes.createCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 201);
@@ -256,8 +264,10 @@ describe("Community handlers", function() {
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.createCommunity(req, res);
+    await CommunityRoutes.createCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
@@ -278,8 +288,10 @@ describe("Community handlers", function() {
       body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.deleteCommunity(req, res);
+    await CommunityRoutes.deleteCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": testCommunity.uuid });
@@ -300,8 +312,10 @@ describe("Community handlers", function() {
       body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.deleteCommunity(req, res);
+    await CommunityRoutes.deleteCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
@@ -325,8 +339,10 @@ describe("Community handlers", function() {
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(
@@ -351,8 +367,10 @@ describe("Community handlers", function() {
       body: { }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
@@ -376,8 +394,10 @@ describe("Community handlers", function() {
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
@@ -402,8 +422,10 @@ describe("Community handlers", function() {
       }
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
+    let next = sinon.stub();
 
-    await CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res, next);
+    sinon.assert.calledOnce(next);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
