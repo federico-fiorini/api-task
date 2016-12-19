@@ -156,29 +156,29 @@ describe("Community handlers", function() {
     Community.findOneAndUpdate.restore();
   });
 
-  it("Should get all communities", function() {
+  it("Should get all communities", async function() {
     // Set test community and expected result
     let dbResponse = [testCommunityDB, testCommunity2DB];
     let expectedResponse = { status: "OK", data: [testCommunity, testCommunity2] };
 
     // Yield expected values
-    Community.find.yields(null, dbResponse);
+    Community.find.returns(dbResponse);
 
     // Set request and response
     let req = { params: { }, body: { } };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.getCommunities(req, res);
+    await CommunityRoutes.getCommunities(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
   });
 
-  it("Should get one community", function() {
+  it("Should get one community", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "OK", data: testCommunity };
 
     // Yield expected values
-    Community.findOne.yields(null, testCommunityDB);
+    Community.findOne.returns(testCommunityDB);
 
     // Set request and response
     let req = {
@@ -189,18 +189,18 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.getCommunity(req, res);
+    await CommunityRoutes.getCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOne, { "uuid": testCommunity.uuid });
   });
 
-  it("Should not find community", function() {
+  it("Should not find community", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "Not found" };
 
     // Yield expected values
-    Community.findOne.yields(null, null);
+    Community.findOne.returns(null);
 
     // Set request and response
     let req = {
@@ -211,19 +211,19 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.getCommunity(req, res);
+    await CommunityRoutes.getCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOne, { "uuid": "not-existing-uuid" });
   });
 
-  it("Should create a new community", function() {
+  it("Should create a new community", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "OK", data: testCommunity2 };
 
     // Yield expected values
-    Community.create.yields(null, testCommunity2DB);
+    Community.create.returns(testCommunity2DB);
 
     // Set request and response
     let req = {
@@ -235,18 +235,18 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.createCommunity(req, res);
+    await CommunityRoutes.createCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 201);
   });
 
-  it("Should not create a new community with db error", function() {
+  it("Should not create a new community with db error", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "ERROR" };
 
     // Yield expected values
-    Community.create.yields("Error in the db", null);
+    Community.create.throws(Error("Error in the db"));
 
     // Set request and response
     let req = {
@@ -257,18 +257,18 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.createCommunity(req, res);
+    await CommunityRoutes.createCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
   });
 
-  it("Should delete a community", function() {
+  it("Should delete a community", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "OK" };
 
     // Yield expected values
-    Community.findOneAndRemove.yields(null, testCommunityDB);
+    Community.findOneAndRemove.returns(testCommunityDB);
 
     // Set request and response
     let req = {
@@ -279,18 +279,18 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.deleteCommunity(req, res);
+    await CommunityRoutes.deleteCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": testCommunity.uuid });
   });
 
-  it("Should not delete a community if not found", function() {
+  it("Should not delete a community if not found", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "Not found" };
 
     // Yield expected values
-    Community.findOneAndRemove.yields(null, null);
+    Community.findOneAndRemove.returns(null);
 
     // Set request and response
     let req = {
@@ -301,19 +301,19 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.deleteCommunity(req, res);
+    await CommunityRoutes.deleteCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOneAndRemove, { "uuid": "not-existing-uuid" });
   });
 
-  it("Should update a community", function() {
+  it("Should update a community", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "OK", data: testCommunity };
 
     // Yield expected values
-    Community.findOneAndUpdate.yields(null, testCommunityDB);
+    Community.findOneAndUpdate.returns(testCommunityDB);
 
     // Set request and response
     let req = {
@@ -326,7 +326,7 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(
@@ -336,12 +336,12 @@ describe("Community handlers", function() {
     );
   });
 
-  it("Should not update a community if not found", function() {
+  it("Should not update a community if not found", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "Not found" };
 
     // Yield expected values
-    Community.findOneAndUpdate.yields(null, null);
+    Community.findOneAndUpdate.returns(null);
 
     // Set request and response
     let req = {
@@ -352,19 +352,19 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 404);
     sinon.assert.calledWith(Community.findOneAndUpdate, { "uuid": "not-existing-uuid" });
   });
 
-  it("Should not update a community if db error", function() {
+  it("Should not update a community if db error", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "ERROR" };
 
     // Yield expected values
-    Community.findOneAndUpdate.yields("Error in the db", null);
+    Community.findOneAndUpdate.throws(Error("Error in db"));
 
     // Set request and response
     let req = {
@@ -377,7 +377,7 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
@@ -388,7 +388,7 @@ describe("Community handlers", function() {
     );
   });
 
-  it("Should not update a community with not updatable fields", function() {
+  it("Should not update a community with not updatable fields", async function() {
     // Set test community and expected result
     let expectedResponse = { status: "ERROR" };
 
@@ -403,7 +403,7 @@ describe("Community handlers", function() {
     };
     let res = { json: sinon.stub(), status: sinon.stub() };
 
-    CommunityRoutes.updateCommunity(req, res);
+    await CommunityRoutes.updateCommunity(req, res);
     sinon.assert.calledOnce(res.json);
     sinon.assert.calledWith(res.json, expectedResponse);
     sinon.assert.calledWith(res.status, 400);
