@@ -1,7 +1,12 @@
 import winston from "winston";
 import lodash from "lodash";
 
-const getRoot = (req, res) => res.json({ status: "OK" });
+const getRoot = (req, res) => res.json({
+  status: "OK",
+  data: {
+    communities: "/api/v1/communities"
+  }
+});
 
 // Send response according to status code
 function sendResponseData(res, statusCode, responseData, responseKeys) {

@@ -6,9 +6,9 @@ export default (app) => {
   app.get("/", handlers.getRoot);
 
   // Define communities handlers
-  app.post("/communities", community.createCommunity);
-  app.get("/communities", community.getCommunities);
-  app.get("/communities/:uuid", community.getCommunity);
-  app.put("/communities/:uuid", community.updateCommunity);
-  app.del("/communities/:uuid", community.deleteCommunity);
+  app.post("/api/v1/communities", community.createCommunity);
+  app.get("/api/v1/communities", community.getCommunities);
+  app.get("/api/v1/communities/:uuid", community.getCommunity);
+  app.put("/api/v1/communities/:uuid", community.updateCommunity);
+  app.del("/api/v1/communities/:uuid", community.deleteCommunity);
 };
