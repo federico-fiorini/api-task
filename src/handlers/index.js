@@ -4,8 +4,8 @@ import lodash from "lodash";
 const getRoot = (req, res) => res.json({
   status: "OK",
   data: {
-    communities: "/api/v1/communities"
-  }
+    communities: "/api/v1/communities",
+  },
 });
 
 // Send response according to status code
