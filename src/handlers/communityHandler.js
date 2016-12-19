@@ -4,7 +4,6 @@ import Community from "api/models/communityModel";
 import handlers from "api/handlers";
 
 function CommunityHandler() {
-
   // Filter results to remove database specific fields
   const schemaKeys = Object.keys(Community.schema.obj);
 
@@ -14,7 +13,7 @@ function CommunityHandler() {
     let newCommunity = {
       uuid: uuidV4(),
       name: req.body.name,
-      description: req.body.description
+      description: req.body.description,
     };
 
     // Filter to remove undefined fields
@@ -68,7 +67,7 @@ function CommunityHandler() {
   this.updateCommunity = (req, res) => {
     // Check if bad request
     const bodyKeys = Object.keys(req.body);
-    for (let i = 0; i < bodyKeys.length; i++) {
+    for (let i = 0; i < bodyKeys.length; i += 1) {
       // Return bad request if not updatable field
       if (Community.updatableFields.indexOf(bodyKeys[i]) === -1) {
         return handlers.sendResponseData(res, 400);
@@ -85,7 +84,7 @@ function CommunityHandler() {
     updatedCommunity = lodash.pickBy(updatedCommunity);
 
     // Find community by uuid and update
-    Community.findOneAndUpdate(
+    return Community.findOneAndUpdate(
       { uuid: req.params.uuid },
       updatedCommunity,
       { new: true },

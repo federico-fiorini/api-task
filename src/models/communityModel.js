@@ -22,7 +22,7 @@ export default (function communityModel() {
 
   // Define schema
   const schema = {
-    uuid: { type: String, required: true , unique : true, dropDups: true},
+    uuid: { type: String, required: true, unique: true, dropDups: true },
     name: { type: String, required: true, validate: nameValidator },
     description: { type: String, required: true, validate: descriptionValidator },
     slug: { type: String, slug: "name", unique: true },
@@ -31,10 +31,10 @@ export default (function communityModel() {
 
   // Create mongoose model
   const communitySchema = mongoose.Schema(schema);
-  let community = mongoose.model("community", communitySchema);
+  const community = mongoose.model("community", communitySchema);
 
   // Set updatable fields
-  community.updatableFields = ['name', 'description'];
+  community.updatableFields = ["name", "description"];
 
   return community;
 }());
